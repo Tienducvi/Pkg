@@ -71,6 +71,27 @@ define("UsrReality_FormPage", /**SCHEMA_DEPS*/[]/**SCHEMA_DEPS*/, function/**SCH
 			},
 			{
 				"operation": "insert",
+				"name": "PushMeBtn",
+				"values": {
+					"type": "crt.Button",
+					"caption": "#ResourceString(Button_ammpec9_caption)#",
+					"color": "accent",
+					"disabled": false,
+					"size": "large",
+					"iconPosition": "left-icon",
+					"visible": true,
+					"icon": "process-button-icon",
+					"clicked": {
+						"request": "usr.PushButtonRequest"
+					},
+					"clickMode": "default"
+				},
+				"parentName": "CardToggleContainer",
+				"propertyName": "items",
+				"index": 0
+			},
+			{
+				"operation": "insert",
 				"name": "UsrName",
 				"values": {
 					"layoutConfig": {
@@ -394,7 +415,37 @@ define("UsrReality_FormPage", /**SCHEMA_DEPS*/[]/**SCHEMA_DEPS*/, function/**SCH
 				}
 			}
 		]/**SCHEMA_MODEL_CONFIG_DIFF*/,
-		handlers: /**SCHEMA_HANDLERS*/[]/**SCHEMA_HANDLERS*/,
+		handlers: /**SCHEMA_HANDLERS*/[
+          {
+
+				request: "usr.PushButtonRequest",
+
+				/* Implementation of the custom query handler. */
+
+				handler: async (request, next) => {
+                    
+					this.console.log("Button works...");
+
+					Terrasoft.showInformation("My button was pressed.");
+
+					var price = await request.$context.PDS_UsrPrice_u1rcs82;
+
+                    var price2 = await request.$context.getAttributeNameByViewItemName("UsrPrice");
+                  
+					this.console.log("Price = " + price);
+
+                    this.console.log("Price = " + price2);
+
+					request.$context.PDS_UsrPrice_u1rcs82 = price * 0.2;
+
+					/* Call the next handler if it exists and return its result. */
+
+					return next?.handle(request);
+
+				}
+
+			},
+        ]/**SCHEMA_HANDLERS*/,
 		converters: /**SCHEMA_CONVERTERS*/{}/**SCHEMA_CONVERTERS*/,
 		validators: /**SCHEMA_VALIDATORS*/{}/**SCHEMA_VALIDATORS*/
 	};
